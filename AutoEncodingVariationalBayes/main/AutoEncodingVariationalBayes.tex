@@ -794,7 +794,7 @@ SGVB推定器とAEVBアルゴリズムは，
 \begin{align*}
     \int q_{\theta} (\bm{z}) \log{q_{\theta} (\bm{z})} \dd{\bm{z}}
         & = \int \mathcal{N} (\bm{z}; \bm{\mu}, \bm{\sigma}^2) \log{\mathcal{N}(\bm{z}; \bm{\mu}, \bm{\sigma}^2)} \dd{\bm{z}} \\
-        & = -\frac{J}{2} \log(2\pi) - \frac{1}{2} \sum_{j=1}^{J} (1 + \log{\mu_j^2})
+        & = -\frac{J}{2} \log(2\pi) - \frac{1}{2} \sum_{j=1}^{J} (1 + \log{\sigma_j^2})
 \end{align*}
 よって，
 \begin{align*}
@@ -805,6 +805,54 @@ SGVB推定器とAEVBアルゴリズムは，
 本文で例示した通り，
 認識モデル\(q_{\theta} (\bm{z} | \bm{x})\)を用いるときは，
 \(\bm{\mu}\)と標準偏差\(\bm{\sigma}\)は\(\bm{x}\)と変分パラメータ\(\phi\)のみの関数となる。
+
+
+
+\section{確率的符号器・復号器としてのMLP}
+
+変分自己符号化器においては，
+ニューラルネットワークが確率的符号器・復号器として用いられる。
+符号器・復号器には，データとモデルの種類に応じて様々なものを用いることができる。
+我々は比較的単純なニューラルネットワーク，所謂多層パーセプトロン（MLP）を用いた。
+符号器にはガウス分布のパラメータを出力するMLPを，
+復号器にはデータの種類に応じてガウス分布もしくはベルヌーイ分布のパラメータを出力するMLPを用いた。
+
+\subsection{復号器にベルヌーイ分布のパラメータを出力するMLPを用いるとき}
+
+このとき，\(p_{\theta} (\bm{x} | \bm{z})\)を，
+\(\bm{z}\)から単層の隠れ層を持つ全結合ニューラルネットワークを用いて計算される多変量ベルヌーイ分布とする。
+\begin{equation}
+    \begin{split}
+        & \log{p(\bm{x} | \bm{z})} = \sum_{i=1}^{D} x_i \log{y_i} + (1 - x_i) \cdot \log(1 - y_i) \\
+        & \text{where} \quad
+            \bm{y} = f_{\sigma} \qty(\bm{W}_2 \tanh(\bm{W}_1 \bm{z} + \bm{b}_1) + \bm{b}_2)
+    \end{split}
+\end{equation}
+ここで，\(f_{\sigma} (.)\)は要素ごとのシグモイド活性化関数であり，
+また，\(\theta = \qty{\bm{W}_1,\ \bm{W}_2,\ \bm{b}_1,\ \bm{b}_2}\)はMLPの重みとバイアスである。
+
+
+\subsection{符号器・復号器にガウス分布のパラメータを出力するMLPを用いるとき}
+
+このとき，符号器または復号器を共分散行列が対角成分のみを持つ多変量ガウス分布として，
+\begin{equation}
+    \begin{split}
+        & \log{p(\bm{x} | \bm{z})} = \log{\mathcal{N}(\bm{x}; \bm{\mu}, \bm{\sigma}^2 \bm{I})} \\
+        & \text{where} \quad \bm{\mu} = \bm{W}_4 \bm{h} + \bm{b}_4 \\
+        & \log{\bm{\sigma}^2} = \bm{W}_5  \bm{h} + \bm{b}_5 \\
+        & \bm{h} = \tanh(\bm{W}_3 \bm{z} + \bm{b}_3)
+    \end{split}
+\end{equation}
+ここで，\(\qty{\bm{W}_3,\ \bm{W}_4,\ \bm{W}_5,\ \bm{b}_3,\ \bm{b}_4,\ \bm{b}_5}\)はMLPの重みとバイアスであり，
+復号器として用いるときは\(\theta\)の一部となる。
+このネットワークが復号器\(q_{\phi} (\bm{z} | \bm{x})\)として用いられるときは，
+\(\bm{z}\)と\(\bm{x}\)が交換され，
+重みとバイアスは変分パラメータ\(\phi\)となることに注意されたい。
+
+
+
+
+
 
 
 
