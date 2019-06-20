@@ -711,7 +711,7 @@ SGVB推定器とAEVBアルゴリズムは，
 図\ref{fig:manifolds}，\ref{fig:latent_spaces}にSGVBで学習を行ったモデルについて，
 潜在空間と対応する観測空間の可視化を示した。
 
-\begin{figure}
+\begin{figure}[H]
     \centering
     \begin{minipage}{0.35\linewidth}
         \centering
@@ -738,7 +738,7 @@ SGVB推定器とAEVBアルゴリズムは，
     \label{fig:manifolds}
 \end{figure}
 
-\begin{figure}
+\begin{figure}[H]
     \centering
     \begin{minipage}{0.2\linewidth}
         \centering
@@ -773,7 +773,38 @@ SGVB推定器とAEVBアルゴリズムは，
 
 
 
+\section{ガウス分布に対する\(D_\mathrm{KL}(q_{\phi}(\bm{z}) || p_{\theta} (\bm{z}))\)の解}
 
+変分下限（最大化したい目的関数）はKL情報量の項を含んでいるが，
+これは解析的に積分することで計算されることが多い。
+ここでは，
+事前分布\(p_{\theta} (\bm{z}) = \mathcal{N} (\bm{0},\ \bm{I})\)
+かつ事後分布の近似\(q_{\phi} (\bm{z} | \bm{x}^{(i)})\)がガウス分布であるときの解を与える。
+\(\bm{z}\)の次元を\(J\)とする。
+\(\bm{\mu}\)と\(\bm{\sigma}\)をデータ\(i\)に対して計算された
+変分平均と標準偏差とし，
+\(\mu_j\)と\(\sigma_j\)でそれらのベクトルの\(j\)番目の要素を指すこととする。
+このとき，
+\begin{align*}
+    \int q_{\theta} (\bm{z}) \log{p(\bm{z})} \dd{\bm{z}}
+        & = \int \mathcal{N} (\bm{z}; \bm{\mu}, \bm{\sigma}^2) \log{\mathcal{N}(\bm{z}; \bm{0}, \bm{I})} \dd{\bm{z}} \\
+        & = -\frac{J}{2} \log(2\pi) - \frac{1}{2} \sum_{j=1}^{J} (\mu_j^2 + \sigma_j^2)
+\end{align*}
+また，
+\begin{align*}
+    \int q_{\theta} (\bm{z}) \log{q_{\theta} (\bm{z})} \dd{\bm{z}}
+        & = \int \mathcal{N} (\bm{z}; \bm{\mu}, \bm{\sigma}^2) \log{\mathcal{N}(\bm{z}; \bm{\mu}, \bm{\sigma}^2)} \dd{\bm{z}} \\
+        & = -\frac{J}{2} \log(2\pi) - \frac{1}{2} \sum_{j=1}^{J} (1 + \log{\mu_j^2})
+\end{align*}
+よって，
+\begin{align*}
+    -D_\mathrm{KL}(q_{\phi}(\bm{z}) || p_{\theta} (\bm{z}))
+        & = \int q_{\theta} (\bm{z}) \qty(\log{p_{\theta} (\bm{z}) - \log{q_{\theta} (\bm{z})}}) \dd{\bm{z}} \\
+        & = \frac{1}{2} \sum_{j=1}^{J} \qty{1 + \log((\sigma_j)^2) - (\mu_j)^2 - (\sigma_j)^2}
+\end{align*}
+本文で例示した通り，
+認識モデル\(q_{\theta} (\bm{z} | \bm{x})\)を用いるときは，
+\(\bm{\mu}\)と標準偏差\(\bm{\sigma}\)は\(\bm{x}\)と変分パラメータ\(\phi\)のみの関数となる。
 
 
 
