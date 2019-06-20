@@ -851,10 +851,46 @@ SGVB推定器とAEVBアルゴリズムは，
 
 
 
+\section{周辺尤度の推定器}
 
+我々は，低次元空間（5次元以下）でかつ十分なサンプル数があるときにいい推定を与える周辺尤度の推定器を導出した。
+\(p_{\theta} (\bm{x},\ \bm{z}) = p_{\theta} (\bm{z}) p_{\theta} (\bm{x} | \bm{z})\)
+を生成モデルとし，
+ここからサンプリングすることを考える。
+データ\(\bm{x}^{(i)}\)に対して，
+周辺尤度\(p_{\theta} (\bm{x}^{(i)})\)を推定する。
 
+推定の過程は以下の3段階に分けられる。
 
-
+\begin{enumerate}
+    \item
+        事後分布から，
+        \(\grad_{\bm{z}} \log{p_{\theta} (\bm{z} | \bm{x})} = \grad_{\bm{z}} \log{p_{\theta} (\bm{z})} + \grad_{\bm{z}} \log{p_{\theta} (\bm{x} | \bm{z})}\)を用い，
+        ハイブリッドモンテカルロ法などの
+        勾配に基づくMCMC法によって，
+        \(L\)個の値\(\qty{\bm{z}^{(l)}}\)をサンプリングする
+    \item
+        密度推定器\(q(\bm{z})\)にこれらのサンプル\(\qty{\bm{z}^{(l)}}\)を代入する
+    \item
+        再び事後分布から\(L\)個のサンプリングを行う。
+        これらのサンプルを，\(q(\bm{z})\)と同様に，
+        次の推定器に代入する。
+        \begin{equation*}
+            p_{\theta} (\bm{x}^{(i)}) \simeq \qty(\frac{1}{L} \sum_{l=1}^{L} \frac{q(\bm{z}^{(l)})}{p_{\theta} (\bm{z}) p_{\theta} (\bm{x}^{(i)} | \bm{z}^{(l)})})^{-1}
+            \quad \text{where} \quad
+            \bm{z}^{(l)} \sim p_{\theta} (\bm{z} | \bm{x}^{(i)})
+        \end{equation*}
+\end{enumerate}
+この推定器の導出は以下の通りである。
+\begin{align*}
+    \frac{1}{p_{\theta} (\bm{x}^{(i)})}
+        & = \frac{\int q(\bm{z}) \dd{\bm{z}}}{p_{\theta} (\bm{x}^{(i)})} \\
+        & = \frac{\int q(\bm{z}) \frac{p_{\theta} (\bm{x}^{(i)},\ \bm{z})}{p_{\theta} (\bm{x}^{(i)},\ \bm{z})} \dd{\bm{z}}}{p_{\theta} (\bm{x}^{(i)})} \\
+        & = \int \frac{p_{\theta} (\bm{x}^{(i)},\ \bm{z})}{p_{\theta} (\bm{x}^{(i)})} \frac{q(\bm{z})}{p_{\theta} (\bm{x}^{(i)},\ \bm{z})} \dd{\bm{z}} \\
+        & = \int p_{\theta} (\bm{z} | \bm{x}^{(i)}) \frac{q(\bm{z})}{p_{\theta} (\bm{x}^{(i)},\ \bm{z})} \dd{\bm{z}} \\
+        & \simeq \frac{1}{L} \sum_{l=1}^{L} \frac{q(\bm{z}^{(l)})}{p_{\theta} (\bm{z}) p_{\theta} (\bm{x}^{(i)} | \bm{z})} \\
+        & \text{where} \quad \bm{z}^{(l)} \sim p_{\theta} (\bm{z} | \bm{x}^{(i)})
+\end{align*}
 
 
 
