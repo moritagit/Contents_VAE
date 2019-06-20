@@ -1,0 +1,311 @@
+\documentclass[dvipdfmx, fleqn]{jsarticle}
+\input{../../../preamble}
+\begin{document}
+
+
+\begin{longtable}{lp{4cm}p{7cm}}
+    %\centering
+    \caption{用語集}
+    \label{tab:terms}
+    \\ \hline
+    単語 & 日本語訳 & 意味 \tabularnewline \hline \hline
+    \endfirsthead
+    単語 & 日本語訳 & 意味 \tabularnewline \hline \hline
+    \endhead
+        autoencoder
+            & 自己符号化器
+            & ニューラルネットワークにより，入力を圧縮したのちそれを復元するように学習したモデルのこと。
+            \tabularnewline \hline
+        auto-encoding
+            & 自己符号化
+            & 
+            \tabularnewline \hline
+        variational
+            & 変分
+            & 
+            \tabularnewline \hline
+        Variational Bayes
+            & 変分ベイズ
+            & 
+            \tabularnewline \hline
+        inference
+            & 推論
+            & モデルにデータを入れて出力を得ること
+            \tabularnewline \hline
+        directed probabilistic models
+            & 有向確率モデル
+            & 有向グラフで定義される確率モデル
+            \tabularnewline \hline
+        continuous
+            & 連続な
+            & 離散的な（discrete）の対義語
+            \tabularnewline \hline
+        latent variable
+            & 潜在変数
+            & 人からは見えない，実際に観測されない，という意味で「潜在」的な変数。
+            観測されるデータを「結果」として考えたときの，
+            「原因」に当たるものとして用いられることが多い（生成モデル）。
+            \tabularnewline \hline
+        dataset
+            & ひとまとまりのデータ
+            & 
+            \tabularnewline \hline
+        intractable
+            & イントラクタブル・計算不可能
+            & 理論上計算可能な問題であっても，
+            計算量が大きすぎて実質的に計算できない。
+            具体的には指数時間のアルゴリズムでかつ\(n\)が大きいとき。
+            \tabularnewline \hline
+        efficient
+            & 計算可能な
+            & 直訳では「効率的な」という意味であるが，
+            ここではintractableの反対語のような役割で，
+            計算量的な観点で計算可能な，といった意味合い。
+            \tabularnewline \hline
+        posterior distribution
+            & 事後分布
+            & 事後確率分布（posterior probability distribution）の略。
+            posteriorと略されることもある。
+            \tabularnewline \hline
+        stochastic
+            & 確率的な
+            & 
+            \tabularnewline \hline
+        variational lower bound
+            & 変分下限
+            & 
+            \tabularnewline \hline
+        stochastic gradient method
+            & 確率的勾配法
+            & 確率的勾配上昇法と確率的勾配降下法をまとめて表現した語句。
+            \tabularnewline \hline
+        i.i.d.
+            & 独立同分布
+            & 「independent and identically distributed」の略。
+            それぞれの確率変数が他の確率変数と同じ確率分布を持ち，
+            かつそれぞれ互いに独立していること。
+            \tabularnewline \hline
+        datapoint
+            & データ点・データ要素
+            & データセット中のある1つのデータ
+            \tabularnewline \hline
+        mean-field
+            & 平均場
+            & 
+            \tabularnewline \hline
+        w.r.t
+            & ～に関して
+            & 「with respect to」の略
+            \tabularnewline \hline
+        ancestral sampling
+            & 伝承サンプリング
+            & 
+            \tabularnewline \hline
+        expensive
+            & 計算コストの高い
+            & 
+            \tabularnewline \hline
+        MCMC
+            & マルコフ連鎖モンテカルロ法
+            & 
+            \tabularnewline \hline
+        maximum likelihood inference
+            & 最尤推定
+            & 頭文字を取ってMLと略される
+            （maximum likelihood estimationをMLEと略す場合が多い）
+            \tabularnewline \hline
+        maximum a posteriori inferecne
+            & 最大事後確率推定
+            & 頭文字を取ってMAP推定と略される
+            \tabularnewline \hline
+        discrete
+            & 離散的な
+            & continuousの対義語
+            \tabularnewline \hline
+        random process
+            & 確率過程
+            & 
+            \tabularnewline \hline
+        random variable
+            & 確率変数
+            & 
+            \tabularnewline \hline
+        conditional distribution
+            & 条件付き確率
+            & 
+            \tabularnewline \hline
+        prior
+            & 事前分布
+            & 
+            \tabularnewline \hline
+        likelihood
+            & 尤度
+            & 
+            \tabularnewline \hline
+        parametric family
+            & 
+            & 
+            \tabularnewline \hline
+        PDF
+            & 確率密度関数
+            & 「probability density function」の略
+            \tabularnewline \hline
+        marginal probability
+            & 周辺確率
+            & 
+            \tabularnewline \hline
+        marginal likelihood
+            & 周辺尤度
+            & 
+            \tabularnewline \hline
+        EM algorythm
+            & EMアルゴリズム
+            & 
+            \tabularnewline \hline
+        coding
+            & 符号化
+            & 
+            \tabularnewline \hline
+        data representation task
+            & 表現学習
+            & feature learningと同義
+            \tabularnewline \hline
+        denoising
+            & ノイズ除去
+            & 
+            \tabularnewline \hline
+        inpainting
+            & 修復
+            & 画像の一部が欠けているとき，
+            周りのピクセルの値からその欠損を埋めるようなタスク
+            \tabularnewline \hline
+        super-resolution
+            & 超解像
+            & 画質の低い画像を高画質にするタスク
+            \tabularnewline \hline
+        factorial
+            & 因子分解可能な
+            & 
+            \tabularnewline \hline
+        closed-form
+            & 閉形式
+            & 
+            \tabularnewline \hline
+        expectation
+            & 期待値
+            & 
+            \tabularnewline \hline
+        coding theory
+            & 符号理論
+            & 
+            \tabularnewline \hline
+        encoder
+            & 符号器
+            & 
+            \tabularnewline \hline
+        decoder
+            & 復号器
+            & 
+            \tabularnewline \hline
+        RHS
+            & （数式の）右辺
+            & right-hand side
+            \tabularnewline \hline
+        KL divergence
+            & カルバック・ライブラー情報量
+            & 2つの確率分布の差異を測る尺度。
+            距離の定義には当てはまらない。
+            KLはKullback–Leiblerの略。
+            \tabularnewline \hline
+        minibatch
+            & ミニバッチ
+            & 
+            \tabularnewline \hline
+        objective function
+            & 目的関数
+            & 学習の際に最適化する関数
+            \tabularnewline \hline
+        regularizer
+            & 正則化項
+            & 目的関数のうち，汎化性能の向上を意図して用いられている項。
+            なお，パラメータの値に制限をかけることでこれを行っている。
+            \tabularnewline \hline
+        tractable
+            & （多項式時間で）計算可能な
+            & intractableの対義語
+            \tabularnewline \hline
+        inverse CDF
+            & 逆累積分布関数
+            & ICDFとも。
+            CDFはcumulative distribution functionの略。
+            \tabularnewline \hline
+        centered isotropic multivariate Gaussian
+            & 標準多変量ガウス分布
+            & centeredは平均が\(\bm{0}\)であることを，isotropic（等方性）は共分散行列が対角成分しか持たず，その値が全て等しいことを表す。
+            \tabularnewline \hline
+        MLP
+            & 多層パーセプトロン
+            & multi layer perceptronの略。
+            \tabularnewline \hline
+        computational complexity
+            & 計算量・計算複雑性
+            & 
+            \tabularnewline \hline
+        exponential family
+            & 
+            & 
+            \tabularnewline \hline
+        natural parameter
+            & 
+            & 
+            \tabularnewline \hline
+        infomax principle
+            & 情報量最大化原理
+            & 
+            \tabularnewline \hline
+        mutual information
+            & 相互情報量
+            & 
+            \tabularnewline \hline
+        conditional entropy
+            & 条件付きエントロピー
+            & 
+            \tabularnewline \hline
+        contractive
+            & 収縮的な
+            & 
+            \tabularnewline \hline
+        sparse
+            & 疎な
+            & 
+            \tabularnewline \hline
+        hyperparameter
+            & ハイパーパラメータ
+            & 人手で調整されるパラメータ。
+            最適化の対象となる，モデルの重みなどは単にパラメータと呼ばれ，
+            これらは区別される。
+            \tabularnewline \hline
+        weight decay
+            & 重み減衰
+            & パラメータのL2正則化をする項
+            \tabularnewline \hline
+        stepsize
+            & 学習率
+            & learning rateと呼ばれることも多い
+            \tabularnewline \hline
+        new
+            & 
+            & 
+            \tabularnewline \hline
+        new
+            & 
+            & 
+            \tabularnewline \hline
+        new
+            & 
+            & 
+            \tabularnewline \hline
+\end{longtable}
+
+
+\end{document}

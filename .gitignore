@@ -1,0 +1,9 @@
+*.aux
+*.dvi
+*.log
+*.out
+*.synctex.gz
+*.toc
+# *.pdf
+
+AutoEncodingVariationalBayes/1312.6114.pdf
