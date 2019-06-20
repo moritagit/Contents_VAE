@@ -914,8 +914,173 @@ SGVB推定器とAEVBアルゴリズムは，
 
 
 
+\section{完全変分ベイズ}
+
+論文に記載の通り，
+変分推論を，
+潜在変数のみでなく
+パラメータ\(\theta\)と潜在変数\(\bm{z}\)の両方を用いて行うことは可能である。
+ここではその場合における推定器を導出しよう。
+
+\(p_{\alpha} (\theta)\)を上記のパラメータに対する
+ハイパーパラメータの事前分布とし，
+\(\alpha\)をそのパラメータとする。
+周辺尤度は次のように表される。
+\begin{equation}
+    \log{p_{\alpha} (\bm{X})}
+        = D_\mathrm{KL} (q_{\phi} (\theta) || p_{\alpha} (\theta | \bm{X}))
+            + \mathcal{L}(\phi; \bm{X})
+\end{equation}
+ここで，右辺第一項は真の事後分布から測ったその近似のKL情報量を表し，
+\(\mathcal{L}(\phi; \bm{X})\)は周辺尤度の変分下限を表す。
+\begin{equation}
+    \mathcal{L}(\phi; \bm{X}) = \int q_{\phi} (\theta) \qty(\log{p_{\theta} (\bm{X})} + \log{p_{\alpha} (\theta)} - \log{q_{\phi} (\theta)}) \dd{\theta}
+    \label{eq:variational_lower_bound_full_VB}
+\end{equation}
+KL情報量は非負のため，
+これが下限となることに注意されたい。
+近似分布が真の分布と完全に一致したとき，下限は真の周辺分布と一致する。
+\(\log{p_{\theta} (\bm{X})}\)の項は各データの周辺尤度の和であり，
+\(\log{p_{\theta} (\bm{X})} = \sum_{i=1}^{N} \log{p_{\theta} (\bm{x}^{(i)})}\)となって，
+またこれの各項は次のように表される。
+\begin{equation}
+    \log{p_{\theta} (\bm{x}^{(i)})} = D_\mathrm{KL} (q_{\phi} (\bm{z} | \bm{x}^{(i)}) || p_{\theta} (\bm{z} | \bm{x}^{(i)})) + \mathcal{L}(\theta, \phi; \bm{x}^{(i)})
+\end{equation}
+ここで再び右辺第一項は真の事後分布から測ったその近似のKL情報量となっており，
+\(\mathcal{L}(\phi; \bm{X})\)はデータ\(i\)の周辺尤度の変分下限を表す。
+\begin{equation}
+    \mathcal{L}(\theta, \phi; \bm{x}^{(i)}) = \int q_{\phi} (\bm{z} | \bm{x}) \qty(\log{p_{\theta} (\bm{x}^{(i)} | \bm{z})} + \log{p_{\theta} (\bm{z})} - \log{q_{\phi} (\bm{z} | \bm{x})}) \dd{\bm{z}}
+    \label{eq:variational_lower_bound_full_VB_per_data}
+\end{equation}
+式(\ref{eq:variational_lower_bound_full_VB})と(\ref{eq:variational_lower_bound_full_VB_per_data})の
+右辺の期待値は当然3つの別々の期待値の和として表すことができる。
+また，\(p_{\theta} (\bm{x})\)と\(q_{\phi} (\bm{z} | \bm{x})\)がともにガウス分布であるなど，
+この第二項と第三項は解析的に解くことができる場合もある。
+一般化のため，ここではこれらの期待値は計算不可能であるとする。
+
+ある緩い条件の下で（本文参照），
+事後分布の近似\(q_{\phi} (\theta)\)と\(q_{\phi} (\bm{z} | \bm{x})\)に対し，
+次のような条件付きサンプリング
+\(\tilde{\bm{z}} \sim q_{\phi} (\bm{z} | \bm{x})\)
+を次式のように再パラメータ化することができる。
+\begin{equation}
+    \tilde{\bm{z}} = g_{\phi} (\bm{\epsilon},\ \bm{x})
+    \quad \text{with} \quad
+    \bm{\epsilon} \sim p(\bm{\epsilon})
+\end{equation}
+ここで，\(p(\bm{\epsilon})\)と関数\(g_{\phi} (\bm{\epsilon},\ \bm{x})\)は次式を満たすように選ばれる。
+\begin{align}
+    \mathcal{L}(\theta, \phi; \bm{x}^{(i)})
+        & = \int q_{\phi} (\bm{z} | \bm{x}) \qty(\log{p_{\theta} (\bm{x}^{(i)} | \bm{z})} + \log{p_{\theta} (\bm{z})} - \log{q_{\phi} (\bm{z} | \bm{x})}) \dd{\bm{z}}
+        \notag \\
+        & = \int p(\bm{\epsilon}) \eval{\qty(\log{p_{\theta} (\bm{x}^{(i)} | \bm{z})} + \log{p_{\theta} (\bm{z})} - \log{q_{\phi} (\bm{z} | \bm{x})})}_{\bm{z} = g_{\phi} (\bm{\epsilon},\ \bm{x}^{(i)})} \dd{\bm{\epsilon}}
+    \label{eq:variational_lower_bound_epsilon}
+\end{align}
+同様のことが事後分布の近似\(q_{\phi} (\theta)\)に対しても行える。
+\begin{equation}
+    \tilde{\theta} = h_{\phi} (\bm{\zeta})
+    \quad \text{with} \quad
+    \bm{\zeta} \sim p(\bm{\zeta})
+\end{equation}
+ここで，上と同様に，
+事前分布\(p(\bm{\zeta})\)と関数\(h_{\phi} (\bm{\zeta})\)を，
+次式が成立するように選ぶ。
+\begin{align}
+    \mathcal{L}(\phi; \bm{X})
+        & = \int q_{\phi} (\theta) \qty(\log{p_{\theta} (\bm{X})} + \log{p_{\alpha} (\theta)} - \log{q_{\phi} (\theta)}) \dd{\theta}
+        \notag \\
+        & = \int p(\bm{\zeta}) \eval{\qty(\log{p_{\theta} (\bm{X})} + \log{p_{\alpha} (\theta)} - \log{q_{\phi} (\theta)})}_{\theta = h_{\phi} (\bm{\zeta})} \dd{\bm{\zeta}}
+    \label{eq:variational_lower_bound_zeta}
+\end{align}
+簡単のため，\(f_{\phi} (\bm{x},\ \bm{z},\ \theta)\)を用いて次のように略記する。
+\begin{equation}
+    f_{\phi} (\bm{x},\ \bm{z},\ \theta) = N \cdot \qty(\log{p_{\theta} (\bm{x} | \bm{z})} + \log{p_{\theta} (\bm{z})} - \log{q_{\phi} (\bm{z} | \bm{x})}) + \log{p_{\alpha} (\theta)} - \log{q_{\phi} (\theta)}
+    \label{eq:shorthand}
+\end{equation}
+式(\ref{eq:variational_lower_bound_zeta})と(\ref{eq:variational_lower_bound_epsilon})
+を用いて，
+データ\(\bm{x}^{(i)}\)に対する変分下限のモンテカルロ推定を行うと，
+\begin{equation}
+    \mathcal{L}(\phi; \bm{X}) \simeq \frac{1}{L} \sum_{l=1}^{L} f_{\phi} \qty(\bm{x}^{(l)},\ g_{\phi} (\bm{\epsilon}^{(l)},\ \bm{x}^{(l)}),\ h_{\phi} (\bm{\zeta}^{(l)}))
+    \label{eq:variational_lower_bound_per_data_MC}
+\end{equation}
+ここで，\(\bm{\epsilon} \sim p(\bm{\epsilon}),\ \bm{\zeta}^{(l)} \sim p(\bm{\zeta})\)である。
+推定器は\(p(\bm{\epsilon})\)と\(p(\bm{\zeta})\)からのサンプリングにしか依存せず，
+それらは\(\phi\)に依存しないため，
+この推定器は\(\phi\)について微分可能である。
+得られる確率的勾配はSGDやAdagrad[DHS10]などの確率的最適化手法とともに用いられ
+る。
+確率的勾配を計算する基本的なアプローチについては，
+アルゴリズム\ref{algo:AEVB_minibatch}を参照されたい。
 
 
+\subsection{例}
+
+パラメータと潜在変数の事前分布を標準ガウス分布
+\(p_{\alpha} = \mathcal{N}(\bm{z}; \bm{0}, \bm{I}),\ p_{\theta} (\bm{z}) = \mathcal{N}(\bm{z}; \bm{0}, \bm{I})\)
+とする。
+このとき，事前分布にパラメータはないことに注意されたい。
+また，真の事後分布も近似的に共分散行列が対角成分しか持たないガウス分布となると仮定する。
+このとき，
+変分近似事後分布は共分散行列が対角成分しか持たない多変量ガウス分布とすることができ，
+\begin{align}
+    & \log{q_{\phi} (\theta)} = \log{\mathcal{N}(\theta; \bm{\mu}_{\theta}, \bm{\sigma}_{\theta}^2 \bm{I})} \notag \\
+    & \log{q_{\phi} (\bm{z} | \bm{x})} = \log{\mathcal{N}(\bm{z}; \bm{\mu}_{\bm{z}}, \bm{\sigma}_{\bm{z}}^2 \bm{I})}
+\end{align}
+ここで，\(\bm{\mu}_{\bm{z}}\)と\(\bm{\sigma}_{\bm{z}}\)は依然\(\bm{x}\)の何らか関数である。
+これらはガウス分布であるため，
+変分近似事後分布をパラメータ化でき，
+\begin{align*}
+    & q_{\phi} (\theta)
+        \quad \text{as} \quad
+        \tilde{\theta} = \bm{\mu}_{\theta} + \bm{\sigma}_{\theta} \odot \bm{\zeta}
+        \qquad \text{where} \quad
+        \bm{\zeta} \sim \mathcal{N}(\bm{0},\ \bm{I}) \\
+    & q_{\phi} (\bm{z} | \bm{x})
+        \quad \text{as} \quad
+        \tilde{\bm{z}} = \bm{\mu}_{\bm{z}} + \bm{\sigma}_{\bm{z}} \odot \bm{\epsilon}
+        \qquad \text{where} \quad
+        \bm{\epsilon} \sim \mathcal{N}(\bm{0},\ \bm{I})
+\end{align*}
+ここで，\(\odot\)は要素ごとの積を表す。
+これらは上で定義した下限の式（式(\ref{eq:shorthand})，(\ref{eq:variational_lower_bound_per_data_MC})）に対して用いることができる。
+
+このとき，
+このモデルでは\(p_{\alpha} (\theta),\ p_{\theta} (\bm{z}),\ q_{\phi} (\theta),\ q_{\phi} (\bm{z} | \bm{x})\)がガウス分布であり，
+\(f_{\phi}\)の4つの項が解析的に求まるので，
+よりバリアンスの小さい別の推定器を構成することができる。
+得られる推定器は次式のようになる。
+\begin{align}
+    \mathcal{L}(\phi; \bm{X})
+        & \simeq \frac{1}{L} \sum_{l=1}^{L} N \cdot \qty(
+            \frac{1}{2} \sum_{j=1}^{J} (1 + \log((\sigma_{\bm{z}, j}^{(l)})^2) - (\mu_{\bm{z}, j}^{(l)})^2 - (\sigma_{\bm{z}, j}^{(l)})^2)
+            + \log{p_{\theta} (\bm{x}^{(i)} \bm{z}^{(i)})}
+            )
+        \notag \\
+        & \ \qquad
+            + \frac{1}{2} \sum_{j=1}^{J} \qty(1 + \log((\sigma_{\theta, j}^{(l)})^2) - (\mu_{\theta, j}^{(l)})^2 - (\sigma_{\theta, j}^{(l)})^2)
+\end{align}
+\(\mu_j^{(l)}\)と\(\sigma_j^{(l)}\)は単にベクトル\(\bm{\mu}^{(i)}\)と\(\bm{\sigma}^{(i)}\)の\(j\)番目の要素を表している。
+
+
+\begin{algorithm}
+    \caption{
+        提案した推定器を用いて確率的勾配を計算する疑似コード。
+        \(f_{\phi},\ g_{\phi},\ h_{\phi}\)の意味については本文参照のこと。
+        }
+    \label{algo:pseudo_SGD}
+    \begin{algorithmic}
+        \REQUIRE \(\phi\) (Current value of variational parameters)
+        \STATE \(g \leftarrow 0\)
+        \FOR{\(l\) is 1 to \(L\)}
+            \STATE \(\bm{x} \leftarrow \text{Random draw from dataset } \bm{X}\)
+            \STATE \(\bm{\epsilon} \leftarrow \text{Random draw from prior } p(\bm{\epsilon})\)
+            \STATE \(\bm{\zeta} \leftarrow \text{Random draw from prior } p(\bm{\zeta})\)
+            \STATE \(g \leftarrow g + \frac{1}{L} \grad_{\phi} f_{\phi} (\bm{x}, g_{\phi} (\bm{\epsilon}, \bm{x}), h_{\phi} (\bm{\zeta})) \)
+        \ENDFOR
+        \RETURN \(g\)
+    \end{algorithmic}
+\end{algorithm}
 
 
 
