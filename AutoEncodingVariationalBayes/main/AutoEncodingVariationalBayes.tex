@@ -1,16 +1,29 @@
-\documentclass[dvipdfmx, fleqn, draft]{jsarticle}
+\documentclass[dvipdfmx, fleqn]{jsarticle}
 \input{../../preamble}
-\title{Auto-Encoding Variational Bayes}
-\date{2014-03-01}
+\title{Auto-Encoding Variational Bayes 日本語訳}
+\date{2019-07-10}
 \author{
-    Diederik P. Kingma
-    \and
-    Max Welling
+    森田涼介
     }
 \begin{document}
 
 \maketitle
 
+\vspace{\baselineskip}
+\begin{center}
+\Large
+    Auto-Encoding Variational Bayes
+
+\large
+\vspace{\baselineskip}
+    Diederik P. Kingma
+    \qquad
+    Max Welling
+ 
+\vspace{\baselineskip}
+    2014-03-01
+\end{center}
+\vspace{2\baselineskip}
 
 
 \begin{abstract}
@@ -48,7 +61,7 @@
 いかにして単純で微分可能な下限の不偏推定器を得られるのかを示す。
 このSGVB (Stochastic Gradient Variational Bayes)推定器は，
 連続潜在変数またはパラメータを持つほとんどのモデルにおいて効率の良い近似的事後推定に用いることができ，
-また，通常の確率上昇法を用いて最適化できる。
+また，通常の確率的勾配上昇法を用いて最適化できる。
 
 各データに対し連続な潜在変数があり，かつi.i.d.なデータセットの場合について，
 我々は自己符号化変分ベイズ（AutoEncoding Variational Bayes, AEVB）アルゴリズムを提案する。
@@ -100,7 +113,7 @@ AEVBアルゴリズムによって，学習・推論を非常に効率よく行�
 ほとんど至るところで微分可能であると仮定する。
 不運なことに，この過程の多くの部分が，我々から見えないところで起こるものである。
 つまり，
-真のパラメータ\(\theta^*\)，及び潜在変数\(\bm{z}^{(i)}\)について，我々の知りえない。
+真のパラメータ\(\theta^*\)，及び潜在変数\(\bm{z}^{(i)}\)について，我々は知りえない。
 
 非常に重要なことだが，我々は，一般的に行われるような周辺確率や事後確率に関する単純化を仮定しない。
 むしろここでは，以下のような場合でも機能するような，
@@ -380,7 +393,7 @@ AEVBアルゴリズムによって，学習・推論を非常に効率よく行�
         = \int p(\bm{\epsilon}) f(\bm{z}) \dd{\bm{\epsilon}}
         = \int p(\bm{\epsilon}) f(g_{\phi} (\bm{\epsilon},\ \bm{x})) \dd{\bm{\epsilon}}
 \end{equation*}
-これに続いて，微分の推定も行われる。
+これに続いて，微分可能な推定器も次のように得られる。
 \begin{equation*}
     \int q_{\phi} (\bm{z} | \bm{x}) f(\bm{z}) \dd{\bm{z}}
         \simeq \frac{1}{L} \sum_{i=1}^{L} f(g_{\phi} (\bm{x},\ \bm{\epsilon}^{(l)}))
@@ -773,7 +786,7 @@ SGVB推定器とAEVBアルゴリズムは，
 
 
 
-\section{ガウス分布に対する\(D_\mathrm{KL}(q_{\phi}(\bm{z}) || p_{\theta} (\bm{z}))\)の解}
+\section{ガウス分布に対する\(D_\mathrm{KL}(q_{\phi}({z}) || p_{\theta} ({z}))\)の解}
 
 変分下限（最大化したい目的関数）はKL情報量の項を含んでいるが，
 これは解析的に積分することで計算されることが多い。
@@ -803,7 +816,7 @@ SGVB推定器とAEVBアルゴリズムは，
         & = \frac{1}{2} \sum_{j=1}^{J} \qty{1 + \log((\sigma_j)^2) - (\mu_j)^2 - (\sigma_j)^2}
 \end{align*}
 本文で例示した通り，
-認識モデル\(q_{\theta} (\bm{z} | \bm{x})\)を用いるときは，
+認識モデル\(q_{\phi} (\bm{z} | \bm{x})\)を用いるときは，
 \(\bm{\mu}\)と標準偏差\(\bm{\sigma}\)は\(\bm{x}\)と変分パラメータ\(\phi\)のみの関数となる。
 
 
